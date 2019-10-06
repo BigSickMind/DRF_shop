@@ -1,72 +1,139 @@
-from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-
-from rest_framework.parsers import JSONParser
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListAPIView
+from rest_framework.views import APIView
+
+from rest_framework.response import Response
+
+from rest_framework import status
+
 from rest_framework.filters import SearchFilter
 
 from .serializers import *
 
 
-# User
-class UserListAPIView(ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+# TODO: User
+class UserListAPIView(APIView):
+    def get(self, request):
+        users = User.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
 
 
-@csrf_exempt
-def user_create(request):
-    if request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = UserCreateSerializer(data=data)
+class UserAPIView(APIView):
+    def get_user(self, pk):
+        try:
+            user = User.objects.get(pk=pk)
+            return user
+        except User.DoesNotExist:
+            raise status.HTTP_404_NOT_FOUND
+
+    def post(self, request):
+        serializer = UserCreateSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return HttpResponse(status=200)
-        return JsonResponse(serializer.errors, status=400)
+            return Response(status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def get(self, request, pk):
+        user = self.get_user(pk)
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
 
-class UserAPIView(RetrieveUpdateDestroyAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-# ProductCategory
-class ProductCategoryListAPIView(ListAPIView):
-    queryset = ProductCategory.objects.all()
-    serializer_class = ProductCategorySerializer
-
-
-@csrf_exempt
-def category_create(request):
-    if request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = ProductCategoryCreateSerializer(data=data)
+    def put(self, request, pk):
+        user = self.get_user(pk)
+        serializer = UserSerializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return HttpResponse(status=200)
-        return JsonResponse(serializer.errors, status=400)
+            return Response(status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        user = self.get_user(pk)
+        user.delete()
+        return Response(status=status.HTTP_200_OK)
 
 
-class ProductCategoryAPIView(RetrieveUpdateDestroyAPIView):
-    queryset = ProductCategory.objects.all()
-    serializer_class = ProductCategorySerializer
+# TODO: ProductCategory
+class ProductCategoryListAPIView(APIView):
+    def get(self, request):
+        categories = ProductCategory.objects.all()
+        serializer = ProductCategorySerializer(categories, many=True)
+        return Response(serializer.data)
 
 
-# Product
-class ProductListAPIView(ListAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
+class ProductCategoryAPIView(APIView):
+    def get_category(self, pk):
+        try:
+            category = ProductCategory.objects.get(pk=pk)
+            return category
+        except ProductCategory.DoesNotExist:
+            raise status.HTTP_404_NOT_FOUND
 
-
-@csrf_exempt
-def product_create(request):
-    if request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = ProductCreateSerializer(data=data)
+    def post(self, request):
+        serializer = ProductCategoryCreateSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return HttpResponse(status=200)
-        return JsonResponse(serializer.errors, status=400)
+            return Response(status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, pk):
+        category = self.get_category(pk)
+        serializer = ProductCategorySerializer(category)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        category = self.get_category(pk)
+        serializer = ProductCategorySerializer(category, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        category = self.get_category(pk)
+        category.delete()
+        return Response(status=status.HTTP_200_OK)
+
+
+# TODO: Product
+class ProductListAPIView(APIView):
+    def get(self, request):
+        products = Product.objects.all()
+        serializer = ProductCategorySerializer(products, many=True)
+        return Response(serializer.data)
+
+
+class ProductAPIView(APIView):
+    def get_product(self, pk):
+        try:
+            product = Product.objects.get(pk=pk)
+            return product
+        except Product.DoesNotExist:
+            raise status.HTTP_404_NOT_FOUND
+
+    def post(self, request):
+        serializer = ProductCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, pk):
+        product = self.get_product(pk)
+        serializer = ProductSerializer(product)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        product = self.get_product(pk)
+        serializer = ProductSerializer(product, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        product = self.get_product(pk)
+        product.delete()
+        return Response(status=status.HTTP_200_OK)
 
 
 class ProductAPIView(RetrieveUpdateDestroyAPIView):
@@ -74,36 +141,41 @@ class ProductAPIView(RetrieveUpdateDestroyAPIView):
     serializer_class = ProductSerializer
 
 
-# Order
+# TODO: Order
 class OrderListAPIView(ListAPIView):
     serializer_class = OrderSerializer
 
     filter_backends = [SearchFilter]
-    search_fields = ['order_status']
+    search_fields = ['order_status', 'email']
 
     queryset = Order.objects.all()
 
-    # def get_queryset(self):
-    #     is_with_task = self.request.GET.get('order_status')
-    #     if is_with_task:
-    #         queryset = Order.objects.exclude(assigned_tasks__assigned__isnull=True)
-    #     else:
-    #         queryset = Order.objects.all()
-    #
-    #     return queryset
+
+class OrderCreateAPIView(APIView):
+    def post(self, request):
+        email = request.data['email']
+        queryset = Order.objects.filter(email=email).count()
+        print(queryset)
+
+        # serializer = OrderCreateSerializer(data=request.data)
+        # if serializer.is_valid():
+        #     serializer.save()
+        #     return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@csrf_exempt
-def order_create(request):
-    if request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = OrderCreateSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return HttpResponse(status=200)
-        return JsonResponse(serializer.errors, status=400)
+# TODO: Update order status
 
-
-class OrderAPIView(RetrieveUpdateDestroyAPIView):
+class OrderCancelAPIView(ListAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+
+    def get_queryset(self):
+        id = self.kwargs.get('id')
+        print(id)
+        # if id:
+        #     queryset = Order.objects.filter()
+        # else:
+        #     queryset = User.objects.all()
+        #
+        # return queryset

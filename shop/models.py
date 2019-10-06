@@ -40,7 +40,7 @@ class Order(models.Model):
 
     amount = models.PositiveIntegerField()
     order_time = models.DateTimeField(auto_now_add=True)
-    comment = models.TextField()
+    comment = models.TextField(blank=True)
     order_status = models.CharField(max_length=30, default='Активный')
 
     @property
