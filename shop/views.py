@@ -7,6 +7,8 @@ from rest_framework.filters import SearchFilter
 
 from .serializers import *
 
+from datetime import datetime, timedelta
+
 
 # TODO: User
 class UserListAPIView(APIView):
@@ -55,7 +57,7 @@ class UserAPIView(APIView):
     def delete(self, request, pk):
         user = self.get_user(pk)
         user.delete()
-        return Response(status=status.HTTP_204_NO_CONTENTK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # TODO: ProductCategory
@@ -112,7 +114,7 @@ class ProductCategoryAPIView(APIView):
 class ProductListAPIView(APIView):
     def get(self, request):
         products = Product.objects.all()
-        serializer = ProductCategorySerializer(products, many=True)
+        serializer = ProductSerializer(products, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -158,12 +160,14 @@ class ProductAPIView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# TODO: Order
 class OrderListAPIView(ListAPIView):
     serializer_class = OrderSerializer
 
     filter_backends = [SearchFilter]
-    search_fields = ['order_status', 'email']
+
+    # TODO: Order search
+    search_fields = ['order_status', 'email__name']
+    # search_fields = ['order_status', 'email__icontains']
 
     queryset = Order.objects.all()
 
@@ -173,14 +177,19 @@ class OrderCreateAPIView(APIView):
     def post(self, request):
         serializer = OrderCreateSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            # serializer.save()
             email = serializer.data['email']
-            order_time = serializer.data['order_time']
-            print(email, order_time)
 
-            # queryset = Order.objects.filter(email=email, order_time=).count()
+            start = datetime.now()
+            end = start + timedelta(days=1)
+            start = start.strftime("%Y-%m-%d")
+            end = end.strftime("%Y-%m-%d")
 
-            # return Response(serializer.data, status=status.HTTP_201_CREATED)
+            # TODO: FILTER
+            queryset = Order.objects.filter(email=email, order_time__range=(start, end)).count()
+            print(queryset)
+
+            # return Response(status=status.HTTP_201_CREATED)
             # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

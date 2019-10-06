@@ -14,8 +14,8 @@ class User(models.Model):
 
 
 class ProductCategory(models.Model):
-    title = models.CharField(max_length=30)
-    url = models.CharField(max_length=30)
+    title = models.CharField(max_length=30, unique=True)
+    url = models.CharField(max_length=30, unique=True)
 
 
 class Product(models.Model):
@@ -33,7 +33,7 @@ class Product(models.Model):
 
 
 class Order(models.Model):
-    email = models.ForeignKey(User, on_delete=models.CASCADE)
+    email = models.ForeignKey(User, to_field='email', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
     amount = models.PositiveIntegerField()
