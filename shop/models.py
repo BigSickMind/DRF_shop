@@ -33,8 +33,6 @@ class Product(models.Model):
 
 
 class Order(models.Model):
-    # STATUS_CHOICES = (('Активный', 'Активный'), ('Отмененённый', 'Отмененённый'))
-
     email = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
 

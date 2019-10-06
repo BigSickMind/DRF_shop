@@ -1,8 +1,6 @@
-from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListAPIView
+from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
-
 from rest_framework.response import Response
-
 from rest_framework import status
 
 from rest_framework.filters import SearchFilter
@@ -15,7 +13,7 @@ class UserListAPIView(APIView):
     def get(self, request):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class UserAPIView(APIView):
@@ -30,26 +28,34 @@ class UserAPIView(APIView):
         serializer = UserCreateSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, pk):
         user = self.get_user(pk)
         serializer = UserSerializer(user)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, pk):
         user = self.get_user(pk)
         serializer = UserSerializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk):
+        user = self.get_user(pk)
+        serializer = UserSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
         user = self.get_user(pk)
         user.delete()
-        return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENTK)
 
 
 # TODO: ProductCategory
@@ -57,7 +63,7 @@ class ProductCategoryListAPIView(APIView):
     def get(self, request):
         categories = ProductCategory.objects.all()
         serializer = ProductCategorySerializer(categories, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ProductCategoryAPIView(APIView):
@@ -72,26 +78,34 @@ class ProductCategoryAPIView(APIView):
         serializer = ProductCategoryCreateSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, pk):
         category = self.get_category(pk)
         serializer = ProductCategorySerializer(category)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, pk):
         category = self.get_category(pk)
         serializer = ProductCategorySerializer(category, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk):
+        category = self.get_category(pk)
+        serializer = ProductCategorySerializer(category, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
         category = self.get_category(pk)
         category.delete()
-        return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # TODO: Product
@@ -99,7 +113,7 @@ class ProductListAPIView(APIView):
     def get(self, request):
         products = Product.objects.all()
         serializer = ProductCategorySerializer(products, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ProductAPIView(APIView):
@@ -114,31 +128,34 @@ class ProductAPIView(APIView):
         serializer = ProductCreateSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, pk):
         product = self.get_product(pk)
         serializer = ProductSerializer(product)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, pk):
         product = self.get_product(pk)
         serializer = ProductSerializer(product, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk):
+        product = self.get_product(pk)
+        serializer = ProductSerializer(product, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
         product = self.get_product(pk)
         product.delete()
-        return Response(status=status.HTTP_200_OK)
-
-
-class ProductAPIView(RetrieveUpdateDestroyAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # TODO: Order
@@ -151,31 +168,36 @@ class OrderListAPIView(ListAPIView):
     queryset = Order.objects.all()
 
 
+# TODO: Create order with limits
 class OrderCreateAPIView(APIView):
     def post(self, request):
-        email = request.data['email']
-        queryset = Order.objects.filter(email=email).count()
-        print(queryset)
+        serializer = OrderCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            email = serializer.data['email']
+            order_time = serializer.data['order_time']
+            print(email, order_time)
 
-        # serializer = OrderCreateSerializer(data=request.data)
-        # if serializer.is_valid():
-        #     serializer.save()
-        #     return Response(serializer.data, status=status.HTTP_201_CREATED)
-        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            # queryset = Order.objects.filter(email=email, order_time=).count()
+
+            # return Response(serializer.data, status=status.HTTP_201_CREATED)
+            # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# TODO: Update order status
+class OrderCancelAPIView(APIView):
+    def get_order(self, pk):
+        try:
+            order = Order.objects.get(pk=pk)
+            return order
+        except Order.DoesNotExist:
+            raise status.HTTP_404_NOT_FOUND
 
-class OrderCancelAPIView(ListAPIView):
-    queryset = Order.objects.all()
-    serializer_class = OrderSerializer
+    def patch(self, request, pk):
+        product = self.get_order(pk)
+        data = {'order_status': "Отменённый"}
 
-    def get_queryset(self):
-        id = self.kwargs.get('id')
-        print(id)
-        # if id:
-        #     queryset = Order.objects.filter()
-        # else:
-        #     queryset = User.objects.all()
-        #
-        # return queryset
+        serializer = OrderSerializer(product, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
