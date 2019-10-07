@@ -8,7 +8,7 @@
 
 - получение, создание, редактирование и удаление пользователей
 
-`POST /users/create/`
+`POST /users/`
 
 JSON BODY (example)
 
@@ -23,7 +23,7 @@ JSON BODY (example)
 
 `GET /users/<user_id>/`
 
-`PUT /users/<user_id>/edit/`
+`PUT /users/<user_id>/`
 
 JSON BODY (example)
 
@@ -34,7 +34,7 @@ JSON BODY (example)
   "email": "6aka@mail.ru"
 }
 
-`PATCH /users/<user_id>/edit/`
+`PATCH /users/<user_id>/`
 
 JSON BODY (example)
 
@@ -42,11 +42,11 @@ JSON BODY (example)
   "name": "Semen"
 }
 
-`DELETE /users/<user_id>/delete/`
+`DELETE /users/<user_id>/`
 
 - получение, создание, редактирование и удаление категорий товаров
 
-`POST /category/create/`
+`POST /category/`
 
 JSON BODY (example)
 
@@ -59,7 +59,7 @@ JSON BODY (example)
 
 `GET /category/<category_id>/`
 
-`PUT /category/<category_id>/edit/`
+`PUT /category/<category_id>/`
 
 JSON BODY (example)
 
@@ -68,7 +68,7 @@ JSON BODY (example)
 	"url": "TV"
 }
 
-`PATCH /category/<category_id>/edit/`
+`PATCH /category/<category_id>/`
 
 JSON BODY (example)
 
@@ -76,11 +76,11 @@ JSON BODY (example)
 	"url": "TVs"
 }
 
-`DELETE /category/<category_id>/delete/`
+`DELETE /category/<category_id>/`
 
 - получение, создание, редактирование и удаление товаров
 
-`POST /product/create/`
+`POST /product/`
 
 JSON BODY (example)
 
@@ -97,7 +97,7 @@ JSON BODY (example)
 
 `GET /product/<category_id>/`
 
-`PUT /product/<product_id>/edit/`
+`PUT /product/<product_id>/`
 
 JSON BODY (example)
 
@@ -110,7 +110,7 @@ JSON BODY (example)
 	"cost": "20000"
 }
 
-`PATCH /product/<product_id>/edit/`
+`PATCH /product/<product_id>/`
 
 JSON BODY (example)
 
@@ -118,7 +118,7 @@ JSON BODY (example)
   "color": "Белый"
 }
 
-`DELETE /product/<product_id>/delete/`
+`DELETE /product/<product_id>/`
 
 - получение, создание, отмена заказов
 
