@@ -11,6 +11,8 @@
 
 `POST /users/create/`
 
+JSON BODY (example)
+
 {
   "surname": "Alexeev",
 	"name": "Anton",
@@ -24,6 +26,8 @@
 
 `PUT /users/<user_id>/edit/`
 
+JSON BODY (example)
+
 {
   "surname": "Sidorov",
 	"name": "Anton",
@@ -32,6 +36,8 @@
 }
 
 `PATCH /users/<user_id>/edit/`
+
+JSON BODY (example)
 
 {
   "name": "Semen"
@@ -42,6 +48,8 @@
 - получение, создание, редактирование и удаление категорий товаров
 
 `POST /category/create/`
+
+JSON BODY (example)
 
 {
   "title": "Телевизоры",
@@ -54,12 +62,16 @@
 
 `PUT /category/<category_id>/edit/`
 
+JSON BODY (example)
+
 {
   "title": "Телевизоры",
 	"url": "TV"
 }
 
 `PATCH /category/<category_id>/edit/`
+
+JSON BODY (example)
 
 {
 	"url": "TVs"
@@ -70,6 +82,8 @@
 - получение, создание, редактирование и удаление товаров
 
 `POST /product/create/`
+
+JSON BODY (example)
 
 {
   "category": 1,
@@ -86,6 +100,8 @@
 
 `PUT /product/<product_id>/edit/`
 
+JSON BODY (example)
+
 {
   "category": 1,
 	"manufacturer": "Samsung",
@@ -97,6 +113,8 @@
 
 `PATCH /product/<product_id>/edit/`
 
+JSON BODY (example)
+
 {
   "color": "Белый"
 }
@@ -106,6 +124,8 @@
 - получение, создание, отмена заказов
 
 `POST /order/create/`
+
+JSON BODY (example)
 
 {
   "email": "6aka@mail.ru",
