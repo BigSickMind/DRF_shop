@@ -144,4 +144,3 @@ JSON BODY (example)
 - поиск заказов по email
 
 `GET /order/?search=<email>`
-
