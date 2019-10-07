@@ -1,7 +1,6 @@
 # Запуск сервера
 - в консоли перейти в директорию с проектом
 - pip install -r requirements.txt
-- python manage.py makemigrations shop
 - python manage.py migrate
 - python manage.py runserver
 
