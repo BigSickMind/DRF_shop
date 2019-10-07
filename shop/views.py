@@ -11,6 +11,13 @@ from datetime import datetime
 
 
 class UserListAPIView(APIView):
+    def post(self, request):
+        serializer = UserCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def get(self, request):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
@@ -24,13 +31,6 @@ class UserAPIView(APIView):
             return user
         except User.DoesNotExist:
             raise status.HTTP_404_NOT_FOUND
-
-    def post(self, request):
-        serializer = UserCreateSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, pk):
         user = self.get_user(pk)
@@ -60,6 +60,13 @@ class UserAPIView(APIView):
 
 
 class ProductCategoryListAPIView(APIView):
+    def post(self, request):
+        serializer = ProductCategoryCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def get(self, request):
         categories = ProductCategory.objects.all()
         serializer = ProductCategorySerializer(categories, many=True)
@@ -73,13 +80,6 @@ class ProductCategoryAPIView(APIView):
             return category
         except ProductCategory.DoesNotExist:
             raise status.HTTP_404_NOT_FOUND
-
-    def post(self, request):
-        serializer = ProductCategoryCreateSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, pk):
         category = self.get_category(pk)
@@ -109,6 +109,13 @@ class ProductCategoryAPIView(APIView):
 
 
 class ProductListAPIView(APIView):
+    def post(self, request):
+        serializer = ProductCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def get(self, request):
         products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
@@ -122,13 +129,6 @@ class ProductAPIView(APIView):
             return product
         except Product.DoesNotExist:
             raise status.HTTP_404_NOT_FOUND
-
-    def post(self, request):
-        serializer = ProductCreateSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, pk):
         product = self.get_product(pk)
@@ -170,6 +170,7 @@ class OrderListAPIView(ListAPIView):
 class OrderCreateAPIView(APIView):
     def post(self, request):
         serializer = OrderCreateSerializer(data=request.data)
+
         if serializer.is_valid():
             email = request.data['email']
             start = datetime.now().strftime("%Y-%m-%d")
@@ -179,8 +180,6 @@ class OrderCreateAPIView(APIView):
             if orders < 5:
                 serializer.save()
                 return Response(status=status.HTTP_201_CREATED)
-            else:
-                return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
