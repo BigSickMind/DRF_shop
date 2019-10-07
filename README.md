@@ -1,60 +1,128 @@
-# Запуск
+# Запуск сервера
 - в консоли перейти в директорию с проектом
-- python3 -m venv env
-- source env/bin/activate
-- pip3 install -r requirements.txt
-- python3 manage.py makemigrations shop
-- python3 manage.py migrate
-- python3 manage.py runserver
+- pip install -r requirements.txt
+- python manage.py makemigrations shop
+- python manage.py migrate
+- python manage.py runserver
 
 # Описание API
 
 - получение, создание, редактирование и удаление пользователей
 
-`GET api/v1/users/`
+`POST /users/create/`
 
-`POST api/v1/users/create/`
+{
+  "surname": "Alexeev",
+	"name": "Anton",
+	"patronymic": "Ivanovich",
+  "email": "6aka@mail.ru"
+}
 
-`GET api/v1/users/<user_id>/`
+`GET /users/`
 
-`PUT/PATCH api/v1/users/<user_id>/edit/`
+`GET /users/<user_id>/`
 
-`DELETE api/v1/users/<user_id>/delete/`
-- получение, создание, редактирование и удаление пользователей
+`PUT /users/<user_id>/edit/`
 
-`GET api/v1/tasks/`
+{
+  "surname": "Sidorov",
+	"name": "Anton",
+	"patronymic": "Ivanovich",
+  "email": "6aka@mail.ru"
+}
 
-`POST api/v1/tasks/create/`
+`PATCH /users/<user_id>/edit/`
 
-`GET api/v1/tasks/<task_id>/`
+{
+  "name": "Semen"
+}
 
-`PUT/PATCH api/v1/tasks/<task_id>/edit/`
+`DELETE /users/<user_id>/delete/`
 
-`DELETE api/v1/tasks/<task_id>/delete/`
-- поиск и фильтрация пользователей по должности
+- получение, создание, редактирование и удаление категорий товаров
 
-`GET api/v1/users/?search=<role>`
+`POST /category/create/`
 
-- поиск и фильтрация задач по названию
+{
+  "title": "Телевизоры",
+	"url": "TVs"
+}
 
-`GET api/v1/tasks/?search=<name>`
+`GET /category/`
 
-- назначение/снятие назначения задачи на пользователя
+`GET /category/<category_id>/`
 
-`PATCH api/v1/tasks/<task_id>/edit/`: "{'assigned': <user_id>}"
+`PUT /category/<category_id>/edit/`
 
-`PATCH api/v1/tasks/<task_id>/edit/`: "{'assigned': null}"
+{
+  "title": "Телевизоры",
+	"url": "TV"
+}
 
-- назначение пользователя, который сможет проверить выполнение конкретной задачи конкретным пользователем (саму проверку и статусы выполнения задачи реализовывать не нужно)
+`PATCH /category/<category_id>/edit/`
 
-`PATCH api/v1/tasks/<task_id>/edit/`: "{'reviewer': <user_id>}"
+{
+	"url": "TVs"
+}
 
-`PATCH api/v1/tasks/<task_id>/edit/`: "{'reviewer': null}"
+`DELETE /category/<category_id>/delete/`
 
-- получение всех задач, назначенных пользователю — с проверяющими, когда они есть
+- получение, создание, редактирование и удаление товаров
 
-`GET api/v1/tasks/assigned-to/<user_id>/`
+`POST /product/create/`
 
-- получение всех пользователей, кому назначена задача
+{
+  "category": 1,
+	"manufacturer": "Samsung",
+	"model": "25001T",
+	"production_date": "2016-10-03",
+	"color": "Чёрный",
+	"cost": "18000"
+}
 
-`GET api/v1/tasks/?with_task=true`
+`GET /product/`
+
+`GET /product/<category_id>/`
+
+`PUT /product/<product_id>/edit/`
+
+{
+  "category": 1,
+	"manufacturer": "Samsung",
+	"model": "25001T",
+	"production_date": "2016-10-03",
+	"color": "Чёрный",
+	"cost": "20000"
+}
+
+`PATCH /product/<product_id>/edit/`
+
+{
+  "color": "Белый"
+}
+
+`DELETE /product/<product_id>/delete/`
+
+- получение, создание, отмена заказов
+
+`POST /order/create/`
+
+{
+  "email": "6aka@mail.ru",
+	"product": 1,
+	"amount": 2,
+  "comment": ""
+}
+
+`GET /order/`
+
+`PATCH /order/<order_id>/cancel/`
+
+- фильтрация заказов по статусу
+
+`GET /order/?search=<status>`
+
+- поиск заказов по email
+
+`GET /order/?search=<email>`
+
