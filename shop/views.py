@@ -7,10 +7,9 @@ from rest_framework.filters import SearchFilter
 
 from .serializers import *
 
-from datetime import datetime, timedelta
+from datetime import datetime
 
 
-# TODO: User
 class UserListAPIView(APIView):
     def get(self, request):
         users = User.objects.all()
@@ -60,7 +59,6 @@ class UserAPIView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# TODO: ProductCategory
 class ProductCategoryListAPIView(APIView):
     def get(self, request):
         categories = ProductCategory.objects.all()
@@ -110,7 +108,6 @@ class ProductCategoryAPIView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# TODO: Product
 class ProductListAPIView(APIView):
     def get(self, request):
         products = Product.objects.all()
@@ -165,32 +162,26 @@ class OrderListAPIView(ListAPIView):
 
     filter_backends = [SearchFilter]
 
-    # TODO: Order search
-    search_fields = ['order_status', 'email__name']
-    # search_fields = ['order_status', 'email__icontains']
+    search_fields = ['order_status', 'email__email']
 
     queryset = Order.objects.all()
 
 
-# TODO: Create order with limits
 class OrderCreateAPIView(APIView):
     def post(self, request):
         serializer = OrderCreateSerializer(data=request.data)
         if serializer.is_valid():
-            # serializer.save()
-            email = serializer.data['email']
+            email = request.data['email']
+            start = datetime.now().strftime("%Y-%m-%d")
 
-            start = datetime.now()
-            end = start + timedelta(days=1)
-            start = start.strftime("%Y-%m-%d")
-            end = end.strftime("%Y-%m-%d")
+            orders = Order.objects.filter(email=email, order_time__contains=start).count()
 
-            # TODO: FILTER
-            queryset = Order.objects.filter(email=email, order_time__range=(start, end)).count()
-            print(queryset)
-
-            # return Response(status=status.HTTP_201_CREATED)
-            # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            if orders < 5:
+                serializer.save()
+                return Response(status=status.HTTP_201_CREATED)
+            else:
+                return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class OrderCancelAPIView(APIView):

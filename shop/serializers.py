@@ -3,7 +3,6 @@ from rest_framework.serializers import ModelSerializer
 from .models import *
 
 
-# User
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
@@ -29,7 +28,6 @@ class UserCreateSerializer(ModelSerializer):
         ]
 
 
-# ProductCategory
 class ProductCategorySerializer(ModelSerializer):
     class Meta:
         model = ProductCategory
@@ -49,7 +47,6 @@ class ProductCategoryCreateSerializer(ModelSerializer):
         ]
 
 
-# Product
 class ProductSerializer(ModelSerializer):
     class Meta:
         model = Product
@@ -78,7 +75,6 @@ class ProductCreateSerializer(ModelSerializer):
         ]
 
 
-# Order
 class OrderSerializer(ModelSerializer):
     class Meta:
         model = Order
