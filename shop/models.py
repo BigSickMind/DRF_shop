@@ -19,6 +19,8 @@ class ProductCategory(models.Model):
 
 
 class Product(models.Model):
+    CURRENCY_CHOICES = (('RUB', 'RUB'), ('EUR', 'EUR'), ('USD', 'USD'))
+
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
 
     manufacturer = models.CharField(max_length=30)
@@ -26,6 +28,7 @@ class Product(models.Model):
     production_date = models.DateField()
     color = models.CharField(max_length=30)
     cost = models.PositiveIntegerField()
+    currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES)
 
     @property
     def full_title(self):
@@ -44,3 +47,16 @@ class Order(models.Model):
     @property
     def total_cost(self):
         return self.amount * self.product.cost
+
+
+class Bill(models.Model):
+    CURRENCY_CHOICES = (('RUB', 'RUB'), ('EUR', 'EUR'), ('USD', 'USD'))
+
+    email = models.ForeignKey(User, to_field='email', on_delete=models.CASCADE)
+
+    money = models.PositiveIntegerField()
+    currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES)
+    date_of_change = models.DateField(auto_now=True)
+
+    class Meta:
+        unique_together = ('email', 'currency',)

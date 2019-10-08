@@ -31,20 +31,13 @@ class UserCreateSerializer(ModelSerializer):
 class ProductCategorySerializer(ModelSerializer):
     class Meta:
         model = ProductCategory
-        fields = [
-            'id',
-            'title',
-            'url',
-        ]
+        fields = '__all__'
 
 
 class ProductCategoryCreateSerializer(ModelSerializer):
     class Meta:
         model = ProductCategory
-        fields = [
-            'title',
-            'url',
-        ]
+        exclude = ['id']
 
 
 class ProductSerializer(ModelSerializer):
@@ -58,6 +51,7 @@ class ProductSerializer(ModelSerializer):
             'production_date',
             'color',
             'cost',
+            'currency',
             'full_title',
         ]
 
@@ -65,14 +59,7 @@ class ProductSerializer(ModelSerializer):
 class ProductCreateSerializer(ModelSerializer):
     class Meta:
         model = Product
-        fields = [
-            'category',
-            'manufacturer',
-            'model',
-            'production_date',
-            'color',
-            'cost',
-        ]
+        exclude = ['id']
 
 
 class OrderSerializer(ModelSerializer):
@@ -98,4 +85,20 @@ class OrderCreateSerializer(ModelSerializer):
             'product',
             'amount',
             'comment',
+        ]
+
+
+class BillSerializer(ModelSerializer):
+    class Meta:
+        model = Bill
+        fields = '__all__'
+
+
+class BillCreateSerializer(ModelSerializer):
+    class Meta:
+        model = Bill
+        fields = [
+            'email',
+            'money',
+            'currency',
         ]

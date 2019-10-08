@@ -14,5 +14,8 @@ urlpatterns = [
 
     path('order/create/', OrderCreateAPIView.as_view()),
     path('order/', OrderListAPIView.as_view()),
-    path('order/<int:pk>/cancel/', OrderCancelAPIView.as_view()),
+    path('order/<int:pk>/', OrderAPIView.as_view()),
+
+    path('bill/', BillListAPIView.as_view()),
+    path('bill/<int:pk>/<int:money>/', BillAPIView.as_view()),
 ]

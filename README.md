@@ -14,8 +14,8 @@ JSON BODY (example)
 
 {
   "surname": "Alexeev",
-	"name": "Anton",
-	"patronymic": "Ivanovich",
+  "name": "Anton",
+  "patronymic": "Ivanovich",
   "email": "6aka@mail.ru"
 }
 
@@ -29,8 +29,8 @@ JSON BODY (example)
 
 {
   "surname": "Sidorov",
-	"name": "Anton",
-	"patronymic": "Ivanovich",
+  "name": "Anton",
+  "patronymic": "Ivanovich",
   "email": "6aka@mail.ru"
 }
 
@@ -52,7 +52,7 @@ JSON BODY (example)
 
 {
   "title": "Телевизоры",
-	"url": "TVs"
+  "url": "TVs"
 }
 
 `GET /category/`
@@ -65,7 +65,7 @@ JSON BODY (example)
 
 {
   "title": "Телевизоры",
-	"url": "TV"
+  "url": "TV"
 }
 
 `PATCH /category/<category_id>/`
@@ -86,11 +86,12 @@ JSON BODY (example)
 
 {
   "category": 1,
-	"manufacturer": "Samsung",
-	"model": "25001T",
-	"production_date": "2016-10-03",
-	"color": "Чёрный",
-	"cost": "18000"
+  "manufacturer": "Samsung",
+  "model": "25001T",
+  "production_date": "2016-10-03",
+  "color": "Чёрный",
+  "cost": "18000",
+  "currency": "RUB"
 }
 
 `GET /product/`
@@ -103,11 +104,12 @@ JSON BODY (example)
 
 {
   "category": 1,
-	"manufacturer": "Samsung",
-	"model": "25001T",
-	"production_date": "2016-10-03",
-	"color": "Чёрный",
-	"cost": "20000"
+  "manufacturer": "Samsung",
+  "model": "25001T",
+  "production_date": "2016-10-03",
+  "color": "Чёрный",
+  "cost": "20000",
+  "currency": "RUB"
 }
 
 `PATCH /product/<product_id>/`
@@ -128,8 +130,8 @@ JSON BODY (example)
 
 {
   "email": "6aka@mail.ru",
-	"product": 1,
-	"amount": 2,
+  "product": 1,
+  "amount": 2,
   "comment": ""
 }
 
@@ -144,3 +146,20 @@ JSON BODY (example)
 - поиск заказов по email
 
 `GET /order/?search=<email>`
+
+
+- получение, создание, пополнение счетов
+
+`POST /bill/`
+
+JSON BODY (example)
+
+{
+  "email": "9aka@mail.ru",
+  "money": 1000000,
+  "currency": "RUB"
+}
+
+`GET /bill/`
+
+`PATCH /bill/<order_id>/<money>/`
